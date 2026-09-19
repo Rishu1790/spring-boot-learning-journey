@@ -1,0 +1,57 @@
+package in.bean.day05springbootdtoandvalidation.mapper;
+
+import in.bean.day05springbootdtoandvalidation.dto.RequestDto;
+import in.bean.day05springbootdtoandvalidation.dto.ResponseDto;
+import in.bean.day05springbootdtoandvalidation.model.Student;
+import org.springframework.http.ResponseEntity;
+
+
+// During Creation
+public class Mapper {
+   public static Student toEntity(RequestDto reqDto){
+       Student student = new Student();
+
+
+       student.setAge(reqDto.getAge());
+       student.setEmail(reqDto.getEmail());
+       student.setName(reqDto.getName());
+       student.setSubject(reqDto.getSubject());
+
+       student.setDeleted(false);
+
+       return student;
+   }
+
+   //
+   public static ResponseDto toDto(Student student){
+       ResponseDto responseDto = new ResponseDto();
+
+       responseDto.setId(student.getId());
+       responseDto.setAge(student.getAge());
+       responseDto.setName(student.getName());
+       responseDto.setRollNo(student.getRollNo());
+       responseDto.setSubject(student.getSubject());
+       responseDto.setEmail(student.getEmail());
+       responseDto.setCreatedAt(student.getCreatedAt());
+       responseDto.setUpdatedAt(student.getUpdatedAt());
+
+       return responseDto;
+   }
+
+
+
+
+   // Isme HUm bss Repalce karte h AAyi hui req Ko Student Entity ke elements se
+
+   public static void updateEntity(Student student,RequestDto dto){
+       student.setAge(dto.getAge());
+       student.setEmail(dto.getEmail());
+       student.setRollNo(dto.getRollNo());
+       student.setName(dto.getName());
+   }
+
+
+
+
+
+}
