@@ -298,3 +298,58 @@ Aaj maine HTTP status codes aur `ResponseEntity` ka use bhi samjha.
 - Global handler se `404 Not Found` response dena
 
 
+# Day 07 - Spring Boot Exception HAndling Continue...
+## Date
+
+## Aaj ka Objective
+-Aaj acche se implement karna h exception handling ko run karna h proper 
+-
+## Aaj maine kya seekha?
+- 
+-
+-
+## Important Concepts
+| Concept | Meaning |
+|---|---|
+|  |  |
+|  |  |
+## Important Code
+```java
+// Day 08 ka important code
+```
+## Application Flow
+```text
+Client
+  ↓
+Controller
+  ↓
+Service
+  ↓
+Repository
+  ↓
+Database
+```
+## Error Faced
+### Error
+```text
+[Exact error message]
+```
+### Reason
+[Error kyu aaya]
+### Solution
+[Error kaise solve kiya]
+## Testing
+```text
+[API URL ya command]
+```
+## Revision Questions
+1.
+2.
+3.
+## Important Learning
+- 
+-
+-
+## Day 08 Summary
+Aaj maine [topic] seekha aur [feature] implement kiya.
+---

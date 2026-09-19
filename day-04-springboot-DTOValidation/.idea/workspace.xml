@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e26a2802-0bf7-4cc2-8a70-b30b3ac8b370" name="Changes" comment="">
+    <list default="true" id="e26a2802-0bf7-4cc2-8a70-b30b3ac8b370" name="Changes" comment="spring Boot DtoValidtion Readme Update">
       <change beforePath="$PROJECT_DIR$/../day-06-springboot-ExceptionHandling/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../day-06-springboot-ExceptionHandling/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -37,6 +37,65 @@
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0002634941404445" />
+      <entry key="MS500" value="1.2213054361223847" />
+      <entry key="S2" value="2.482964208333417" />
+      <entry key="S5" value="4.31581207527946" />
+      <entry key="S10" value="6.067420441903978" />
+      <entry key="S30" value="8.28434906523626" />
+      <entry key="S60" value="9.07510725748243" />
+      <entry key="M2" value="9.51918657530886" />
+      <entry key="M5" value="9.803042428614784" />
+      <entry key="M10" value="9.900729635125415" />
+      <entry key="M15" value="9.933642370168519" />
+      <entry key="M30" value="9.966732118603545" />
+      <entry key="H1" value="9.983343722409389" />
+      <entry key="H2" value="9.991666268171297" />
+      <entry key="H4" value="9.995831734724366" />
+      <entry key="D1" value="9.999305094671305" />
+      <entry key="W1" value="9.99990072304694" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.9463051963267602" />
+      <entry key="MS500" value="1.1979211183145888" />
+      <entry key="S2" value="2.430550868536371" />
+      <entry key="S5" value="4.27803441494664" />
+      <entry key="S10" value="6.043651744391938" />
+      <entry key="S30" value="8.274848889118015" />
+      <entry key="S60" value="9.070107231674847" />
+      <entry key="M2" value="9.516618716847288" />
+      <entry key="M5" value="9.801998237889874" />
+      <entry key="M10" value="9.900204631243332" />
+      <entry key="M15" value="9.93329171612318" />
+      <entry key="M30" value="9.966556464559067" />
+      <entry key="H1" value="9.98325581338797" />
+      <entry key="H2" value="9.991622293130218" />
+      <entry key="H4" value="9.9958097420674" />
+      <entry key="D1" value="9.99930142851476" />
+      <entry key="W1" value="9.999900199292808" />
+    </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -87,11 +146,24 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1789561418641</updated>
-      <workItem from="1789845450224" duration="624000" />
+      <workItem from="1789845450224" duration="736000" />
     </task>
+    <task id="LOCAL-00001" summary="spring Boot DtoValidtion Readme Update">
+      <option name="closed" value="true" />
+      <created>1789846224671</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1789846224671</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="spring Boot DtoValidtion Readme Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="spring Boot DtoValidtion Readme Update" />
   </component>
 </project>
