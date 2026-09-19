@@ -1,95 +1,300 @@
-# Day 02 - Spring Boot CRUD(EXception HAndling)
-
-
+# Day 06 - Spring Boot Exception Handling
 
 ## Aaj maine kya seekha?
 
-- Abhi controller hi Exception Handle karr raha jo hume nhi karna h 
-  iss controoller bulky ho jata h.
-- Flow Exceptoion Handler
-  |Client| --> |Controller| --> |Service| --> |Repository|
-                                    |
-                                    | Error Found
-                                    |
-                              |Exception Handler|
+- Abhi tak hum controller ke andar hi exception handle kar rahe the.
+- Lekin agar har controller method me exception handle karenge to controller kaafi bulky ho jayega.
+- Isliye exception ko ek common class me handle karna better hota hai.
+- Is concept ko hum **Global Exception Handling** kehte hain.
+- Spring Boot by default generic error response deta hai.
+- Hum custom exception aur custom response bana kar error ko apne way me handle kar sakte hain.
 
+## Exception Handling ka Flow
 
+```text
+Client/Postman
+      |
+      v
+Controller
+      |
+      v
+Service
+      |
+      v
+Repository
+      |
+      v
+Database
+```
 
+Agar kisi step par error aata hai:
 
+```text
+Error Found
+     |
+     v
+Global Exception Handler
+     |
+     v
+Error Response Client ko
+```
 
+## Controller ke andar problem
 
+Agar hum controller me baar-baar aisa code likhenge:
 
-- SpringBoot Exception handle bhot generic karta h 
-- to hum customizably handle kare taaki or ache se error handle karenge 
- 
-- 
-- {HTTPS STATUS CODE}
-1xx :Informational
-2xx :Successful(201,200,204 etc)
-3xx :Redirection(301,302etc)
-4xx :Client Side Error(400,404,409 etc)
-5xx :Server Side (500)
+```java
+if (student == null) {
+    return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body("Student not found");
+}
+```
 
-**Most Used**
-200 ok
-201 created
-204 No content
-400 Bad request
-404 Response not Found
-409 conflict
-500 Internal Server Error
+To har method me same type ka code repeat hoga.
 
-ResponseEntity = body+status
-               = body+status+headers
-               = status
+Isse:
 
+- Controller ka code bada ho jayega.
+- Same code baar-baar likhna padega.
+- Code maintain karna difficult hoga.
 
+Isliye hum ek alag class banayenge:
 
+```text
+GlobalExceptionHandler
+```
 
+## Global Exception Handling kya hoti hai?
 
+Global Exception Handling ka matlab hai ki poori application ki exceptions ko ek common class me handle karna.
 
+Isse controller ka code clean rahega aur error response bhi same format me milega.
 
+## Important Annotations
 
+### `@RestControllerAdvice`
 
-## Important Annotation
-@RestControllerAdvice :- COntroller ki helper classes
-@ControllerAdvice  
-@ExceptionHandler(RuntimeException.class) --> btata h ki koi method exception handler h
+Ye annotation ek helper class banata hai jo sabhi controllers ki exceptions ko handle kar sakti hai.
 
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+}
+```
 
+### `@ExceptionHandler`
 
+Ye annotation batata hai ki kaunsa method kis exception ko handle karega.
 
+```java
+@ExceptionHandler(RuntimeException.class)
+public ResponseEntity<String> handleException(
+        RuntimeException exception) {
 
+    return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(exception.getMessage());
+}
+```
 
-## Important Commands
+## Important HTTP Status Codes
 
+| Status Code | Meaning |
+|---|---|
+| `200 OK` | Request successfully complete hui |
+| `201 Created` | Naya data create hua |
+| `204 No Content` | Request successful hui, lekin response body nahi hai |
+| `400 Bad Request` | Client ne galat request bheji |
+| `404 Not Found` | Requested data nahi mila |
+| `409 Conflict` | Data ke saath conflict hua |
+| `500 Internal Server Error` | Server ke andar unexpected error aaya |
 
-## Default Port
+## ResponseEntity
 
+`ResponseEntity` ke through hum response ka status aur body dono bhej sakte hain.
+
+```text
+ResponseEntity = Body + Status
+```
+
+Example:
+
+```java
+return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body("Student not found");
+```
+
+Isme:
+
+```text
+Status = 404 Not Found
+Body   = Student not found
+```
+
+## Important Code
+
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleException(
+            RuntimeException exception) {
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(exception.getMessage());
+    }
+}
 ```
 
 ## Error Faced
 
+### Error Message
 
-#### Error Message
-
-
-
-#### Error ka Meaning
-
-
-
-#### Error ka Possible Reason
-
-
-
-## Error ka Solution
-
-
+```text
+Student not found
 ```
 
-## Configuration File
+### Error ka Reason
 
+Jo student ID request me bheji gayi thi,
+us ID ka student database me nahi mila.
+
+### Pehle kaise handle kar rahe the?
+
+Pehle controller ke andar hi check kar rahe the:
+
+```java
+if (student == null) {
+    return ResponseEntity.notFound().build();
+}
+```
+
+Lekin ye approach har method ke liye repeat karni padti thi.
+
+### Ab kaise solve kiya?
+
+- Ek `GlobalExceptionHandler` class banayi.
+- Usme `@RestControllerAdvice` lagaya.
+- Exception handle karne ke liye `@ExceptionHandler` use kiya.
+- Ab controller me baar-baar exception handling likhne ki zaroorat nahi hai.
+
+## Application ka Simple Flow
+
+```text
+Student nahi mila
+        |
+        v
+Exception throw hogi
+        |
+        v
+GlobalExceptionHandler
+        |
+        v
+404 Not Found
+        |
+        v
+Client ko error message
+```
+
+## API Testing
+
+Request:
+
+```text
+GET http://localhost:8080/api/students?id=999
+```
+
+Expected response:
+
+```text
+404 Not Found
+```
+
+Response body:
+
+```text
+Student not found
+```
+
+## Important Commands
+
+```bash
+mvn spring-boot:run
+```
+
+Application run karne ke liye.
+
+```bash
+mvn test
+```
+
+Test run karne ke liye.
+
+```bash
+mvn clean install
+```
+
+Project ko clean karke build karne ke liye.
+
+## Default Port
+
+Spring Boot ka default port:
+
+```text
+8080
+```
+
+Application URL:
+
+```text
+http://localhost:8080
+```
 
 ## Important Learning
+
+- Har controller me exception handle karna sahi approach nahi hai.
+- Isse controller bulky ho jata hai.
+- Global Exception Handler exception ko ek hi place par handle karta hai.
+- `@RestControllerAdvice` global handler banane ke liye use hota hai.
+- `@ExceptionHandler` specific exception handle karta hai.
+- `ResponseEntity` status aur body return karne ke liye use hota hai.
+- `404` tab return hota hai jab requested student nahi milta.
+- `500` server ke unexpected error ke liye hota hai.
+- Controller me request handling honi chahiye.
+- Service me business logic honi chahiye.
+- Exception handling ke liye separate global handler hona chahiye.
+
+## Revision Questions
+
+1. Controller ke andar exception handle karne se kya problem hoti hai?
+2. Global Exception Handling kya hoti hai?
+3. `@RestControllerAdvice` ka use kyu karte hain?
+4. `@ExceptionHandler` kya karta hai?
+5. `ResponseEntity` ka use kya hai?
+6. `404 Not Found` kab aata hai?
+7. `500 Internal Server Error` kab aata hai?
+8. Exception handling ko separate class me rakhna better kyu hai?
+
+## Day 06 ka Summary
+
+Aaj maine samjha ki agar hum controller ke andar hi exception handle karte rahenge,
+to controller ka code bulky ho jayega.
+
+Is problem ko solve karne ke liye humne Global Exception Handling ka concept seekha.
+`@RestControllerAdvice` aur `@ExceptionHandler` ki help se exceptions ko ek common
+class me handle kar sakte hain.
+
+Aaj maine HTTP status codes aur `ResponseEntity` ka use bhi samjha.
+
+## Next Topic
+
+- `ResourceNotFoundException`
+- Custom exception banana
+- Student nahi milne par exception throw karna
+- Global handler se `404 Not Found` response dena
+
 
