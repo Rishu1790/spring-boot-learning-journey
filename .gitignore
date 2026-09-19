@@ -1,0 +1,16 @@
+.idea/
+*/.idea/
+
+target/
+*/target/
+
+*.iml
+*.log
+*.class
+
+.env
+application-local.properties
+application-secret.properties
+
+Thumbs.db
+desktop.ini
