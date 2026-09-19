@@ -1,5 +1,6 @@
 package in.bean.day05springbootdtoandvalidation.service;
 
+import in.bean.day06springbootexceptionhandling.globalexceptionhandler.ResourceNotFoundException;
 import in.bean.day05springbootdtoandvalidation.dto.RequestDto;
 import in.bean.day05springbootdtoandvalidation.dto.ResponseDto;
 import in.bean.day05springbootdtoandvalidation.mapper.Mapper;
@@ -8,9 +9,8 @@ import in.bean.day05springbootdtoandvalidation.repository.StudentRepo;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Optional;
-import java.util.*;
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -36,13 +36,10 @@ public class StudentService {
     public ResponseDto getStudentById(Long id) {
         Optional<Student> getStudent = studentRepo.findByIdAndDeletedIsFalse(id);
 
-        if(getStudent.isPresent()){
-            return Mapper.toDto(getStudent.get());
-        }
-        else {
-        return null;
+        return getStudent
+                .map(Mapper::toDto)
+                .orElseThrow(() -> studentNotFound(id));
     }
-}
 
     public List<ResponseDto> getAllStudentService() {
 
@@ -57,16 +54,14 @@ public class StudentService {
         Optional<Student> existingStudent = studentRepo.findByIdAndDeletedIsFalse(id);
 
         if(existingStudent.isEmpty()){
-            return null;
+            throw studentNotFound(id);
         }
-        else{
-            Student saveStudent =  existingStudent.get();
 
-            Mapper.updateEntity(saveStudent,requestDto);
-            saveStudent.setUpdatedAt(LocalDateTime.now());
+        Student saveStudent = existingStudent.get();
+        Mapper.updateEntity(saveStudent,requestDto);
+        saveStudent.setUpdatedAt(LocalDateTime.now());
 
-            return Mapper.toDto(saveStudent);
-        }
+        return Mapper.toDto(studentRepo.save(saveStudent));
     }
     /**
      * Soft delete: row DB mein rehta hai, sirf flag set hota hai.
@@ -76,7 +71,7 @@ public class StudentService {
         Optional<Student> existingStudent = studentRepo.findByIdAndDeletedIsFalse(id);
 
         if (existingStudent.isEmpty()) {
-            return false; // already deleted ya exist hi nahi karta
+            throw studentNotFound(id);
         }
 
         Student student = existingStudent.get();
@@ -95,9 +90,13 @@ public class StudentService {
      */
     public boolean hardDeleteStudent(Long id) {
         if (!studentRepo.existsById(id)) {
-            return false;
+            throw studentNotFound(id);
         }
         studentRepo.deleteById(id);
         return true;
+    }
+
+    private ResourceNotFoundException studentNotFound(Long id) {
+        return new ResourceNotFoundException("Student not found with id: " + id);
     }
 }

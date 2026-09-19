@@ -2,15 +2,12 @@ package in.bean.day05springbootdtoandvalidation.controller;
 
 import in.bean.day05springbootdtoandvalidation.dto.RequestDto;
 import in.bean.day05springbootdtoandvalidation.dto.ResponseDto;
-import in.bean.day05springbootdtoandvalidation.mapper.Mapper;
-import in.bean.day05springbootdtoandvalidation.model.Student;
 import in.bean.day05springbootdtoandvalidation.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -42,12 +39,7 @@ public class StudentController {
     public ResponseEntity<ResponseDto> getStudent(@RequestParam Long id){
         ResponseDto showStudent = studentService.getStudentById(id);
 
-        if(showStudent == null){
-            return ResponseEntity.notFound().build();
-        }
-        else {
-            return ResponseEntity.ok(showStudent);
-        }
+        return ResponseEntity.ok(showStudent);
     }
 
 
@@ -65,35 +57,23 @@ public class StudentController {
     public ResponseEntity<ResponseDto> updateStudent(@RequestParam Long id,
                                                      @RequestBody RequestDto requestDto){
         ResponseDto updatedStudent = studentService.updateStudent(id,requestDto);
-        if(updatedStudent == null){
-            return ResponseEntity.notFound()
-                    .build();
-
-        }else{
-            return ResponseEntity.ok(updatedStudent);
-        }
+        return ResponseEntity.ok(updatedStudent);
 
     }
 
     // Soft Delete
     @PatchMapping
     public ResponseEntity<Void> softDeleteStudent(@RequestParam Long id) {
-        boolean isDeleted = studentService.softDeleteStudent(id);
+        studentService.softDeleteStudent(id);
 
-        if (!isDeleted) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.noContent().build(); // 204
     }
 
     // Hard Delete
     @DeleteMapping
     public ResponseEntity<Void> deleteStudent(@RequestParam Long id) {
-        boolean isDeleted = studentService.hardDeleteStudent(id);
+        studentService.hardDeleteStudent(id);
 
-        if (!isDeleted) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.noContent().build(); // 204
     }
 
