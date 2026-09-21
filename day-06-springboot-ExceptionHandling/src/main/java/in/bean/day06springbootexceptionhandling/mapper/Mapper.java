@@ -5,6 +5,8 @@ import in.bean.day06springbootexceptionhandling.dto.ResponseDto;
 import in.bean.day06springbootexceptionhandling.model.Student;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
+
 
 // During Creation
 public class Mapper {
@@ -16,6 +18,7 @@ public class Mapper {
        student.setEmail(reqDto.getEmail());
        student.setName(reqDto.getName());
        student.setSubject(reqDto.getSubject());
+       student.setRollNo(reqDto.getRollNo());
 
        student.setDeleted(false);
 
@@ -34,9 +37,22 @@ public class Mapper {
        responseDto.setEmail(student.getEmail());
        responseDto.setCreatedAt(student.getCreatedAt());
        responseDto.setUpdatedAt(student.getUpdatedAt());
+       responseDto.setMessage("Present");
+
 
        return responseDto;
    }
+
+   // To Add messages During Create And Updated message so We can Ovverride Above methods
+
+    public static ResponseDto toDto(Student student,String message){
+
+       ResponseDto dto = toDto(student);
+
+       dto.setMessage(message);
+       return dto;
+
+    }
 
 
 
@@ -48,6 +64,8 @@ public class Mapper {
        student.setEmail(dto.getEmail());
        student.setRollNo(dto.getRollNo());
        student.setName(dto.getName());
+
+       student.setUpdatedAt(LocalDateTime.now());
    }
 
 

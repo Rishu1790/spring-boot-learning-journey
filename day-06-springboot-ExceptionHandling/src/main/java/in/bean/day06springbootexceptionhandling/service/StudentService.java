@@ -2,6 +2,8 @@ package in.bean.day06springbootexceptionhandling.service;
 
 import in.bean.day06springbootexceptionhandling.dto.RequestDto;
 import in.bean.day06springbootexceptionhandling.dto.ResponseDto;
+import in.bean.day06springbootexceptionhandling.globalexceptionhandler.DuplicateResourceException;
+import in.bean.day06springbootexceptionhandling.globalexceptionhandler.ResourceNotFoundException;
 import in.bean.day06springbootexceptionhandling.mapper.Mapper;
 import in.bean.day06springbootexceptionhandling.model.Student;
 import in.bean.day06springbootexceptionhandling.repository.StudentRepo;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 import java.util.*;
+
+import static in.bean.day06springbootexceptionhandling.mapper.Mapper.toDto;
 
 @Service
 public class StudentService {
@@ -23,21 +27,28 @@ public class StudentService {
 
     public ResponseDto createStudentService(RequestDto reqStudent) {
         Student student = Mapper.toEntity(reqStudent);
-
         student.setCreatedAt(LocalDateTime.now());
         student.setUpdatedAt(LocalDateTime.now());
-        student.setDeleted(false);
+        if(emailExists(student)){
+            throw new DuplicateResourceException("Student with null "+ student.getEmail()
+            + " Email Already Exist");
+        }
 
-        return Mapper.toDto(studentRepo.save(student));
-
+        Student studentResp = studentRepo.save(student);
+       return Mapper.toDto(studentResp,"Saved Successfully");
 
     }
 
-    public ResponseDto getStudentById(Long id) {
-        Optional<Student> getStudent = studentRepo.findByIdAndDeletedIsFalse(id);
 
-      return Mapper.toDto(getStudent.get());
-}
+
+    public ResponseDto getStudentById(Long id) {
+       Student studentResp = studentRepo
+               .findByIdAndDeletedIsFalse(id)
+               .orElseThrow(() ->
+                        new ResourceNotFoundException("Student with id "+ id + " not found"));
+
+       return toDto(studentResp);
+    }
 
     public List<ResponseDto> getAllStudentService() {
 
@@ -49,37 +60,30 @@ public class StudentService {
 
     public ResponseDto updateStudent(Long id, RequestDto requestDto) {
 
-        Optional<Student> existingStudent = studentRepo.findByIdAndDeletedIsFalse(id);
+        Student existingStudent = studentRepo
+                .findByIdAndDeletedIsFalse(id)
+                .orElseThrow(()->new ResourceNotFoundException("Student with id "+ id + " not found"));
 
-        if(existingStudent.isEmpty()){
-            return null;
+
+            Mapper.updateEntity(existingStudent,requestDto);
+            existingStudent.setUpdatedAt(LocalDateTime.now());
+            Student studentResp = studentRepo.save(existingStudent);
+
+            return toDto(studentResp,"Updated Successfully");
         }
-        else{
-            Student saveStudent =  existingStudent.get();
 
-            Mapper.updateEntity(saveStudent,requestDto);
-            saveStudent.setUpdatedAt(LocalDateTime.now());
-
-            return Mapper.toDto(saveStudent);
-        }
-    }
     /**
      * Soft delete: row DB mein rehta hai, sirf flag set hota hai.
      * Existing pattern (deleted boolean) ke saath consistent hai.
      */
-    public boolean softDeleteStudent(Long id) {
-        Optional<Student> existingStudent = studentRepo.findByIdAndDeletedIsFalse(id);
+    public void softDeleteStudent(Long id) {
+        Student studentToBeDeleted = studentRepo
+                .findByIdAndDeletedIsFalse(id)
+                .orElseThrow(()->new ResourceNotFoundException("Student with id "+ id + " not found"));
 
-        if (existingStudent.isEmpty()) {
-            return false; // already deleted ya exist hi nahi karta
-        }
+        studentToBeDeleted.setDeleted(true);
+        studentRepo.save(studentToBeDeleted);
 
-        Student student = existingStudent.get();
-        student.setDeleted(true);
-        student.setUpdatedAt(LocalDateTime.now()); // audit trail update
-        studentRepo.save(student);
-
-        return true;
     }
 
     /**
@@ -88,11 +92,18 @@ public class StudentService {
      * kyunki agar row already soft-deleted hai, use bhi permanently
      * hata sakna chahiye (cleanup use case).
      */
-    public boolean hardDeleteStudent(Long id) {
-        if (!studentRepo.existsById(id)) {
-            return false;
-        }
-        studentRepo.deleteById(id);
-        return true;
+    public void hardDeleteStudent(Long id) {
+        Student studentToBeDeleted = studentRepo
+                .findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Student with id "+ id + " not found"));
+
+       studentRepo.delete(studentToBeDeleted);
+
     }
+
+    private boolean emailExists(Student student) {
+        return studentRepo.existsByEmail(student.getEmail());
+    }
+
+
 }

@@ -302,21 +302,50 @@ Aaj maine HTTP status codes aur `ResponseEntity` ka use bhi samjha.
 ## Date
 
 ## Aaj ka Objective
--Aaj acche se implement karna h exception handling ko run karna h proper 
--
+- Aaj acche se implement karna h exception handling ko run karna h proper 
+- 
+- 
 ## Aaj maine kya seekha?
+- ek Resource Not found Exception class bnaya phirr extend kiya run time exception se
+- super :- Immediate Parent class ko call karna 
+- this :- jis class me h use call karn a
+- 
 - 
 -
--
+## Building Error Message Format
+-    timeStamp;
+-   statusCode;
+-   error;
+-  message;
+- path;
+
+### Using ExeptionDto
+
+-to hum global Exception me Class String Na rakh ke Exception Dto rakhenge taake siple String Output na bhejna pade;
+
+
 ## Important Concepts
-| Concept | Meaning |
+Format Of Error given by Global Exception Handing flow
+|Error  | Meaning |
 |---|---|
 |  |  |
 |  |  |
 ## Important Code
 ```java
-// Day 08 ka important code
+package in.bean.day06springbootexceptionhandling.globalexceptionhandler;
+
+public class ResourceNotFoundException extends RuntimeException{
+
+    public ResourceNotFoundException(String message){
+        super(message);
+    }
+}
 ```
+```java
+
+
+
+````
 ## Application Flow
 ```text
 Client
@@ -330,14 +359,45 @@ Repository
 Database
 ```
 ## Error Faced
-### Error
+### Error-1
 ```text
-[Exact error message]
+Postman Showing this When I Run Application
+
+{
+    "id": null,
+    "name": null,
+    "subject": null,
+    "age": 0,
+    "rollNo": 0,
+    "email": null,
+    "createdAt": null,
+    "updatedAt": null,
+    "message": "Saved Successfully"
+}
 ```
 ### Reason
-[Error kyu aaya]
+```java
+public static ResponseDto toDto(Student student,String message){
+
+       ResponseDto dto = toDto(student);
+       // ResponseDto dto = new Responsedto(); -> error
+
+       dto.setMessage(message);
+       return dto;
+
+    }
+```
+
 ### Solution
-[Error kaise solve kiya]
+- bass line replace kiya new Response entity create nhi karni h bass inputted student ko dto me convert karenge
+
+### Error2
+- Response Message Harr bArr null aa raha tha jab Get call kare tbb noramlly;
+- fix:- ToDto method me Error message ko by default set karr diya;
+- isse update or create ke samay wale messages me koi problem nhi hogi
+
+
+
 ## Testing
 ```text
 [API URL ya command]
@@ -346,8 +406,9 @@ Database
 1.
 2.
 3.
-## Important Learning
-- 
+## Important Annotation
+- @RestControllerAdvice :- Yeh ek helper class h controller ki
+- @ExceptionHandler(---.class):- konsi class handle karna h  
 -
 -
 ## Day 08 Summary

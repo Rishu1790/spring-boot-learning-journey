@@ -44,12 +44,8 @@ public class StudentController {
     public ResponseEntity<ResponseDto> getStudent(@PathVariable Long id){
         ResponseDto showStudent = studentService.getStudentById(id);
 
-        if(showStudent == null){
-            return ResponseEntity.notFound().build();
-        }
-        else {
+        // Null Handle service se GlobalException class karr raha h
             return ResponseEntity.ok(showStudent);
-        }
     }
 
 
@@ -67,36 +63,26 @@ public class StudentController {
     public ResponseEntity<ResponseDto> updateStudent(@RequestParam Long id,
                                                      @RequestBody RequestDto requestDto){
         ResponseDto updatedStudent = studentService.updateStudent(id,requestDto);
-        if(updatedStudent == null){
-            return ResponseEntity.notFound()
-                    .build();
 
-        }else{
             return ResponseEntity.ok(updatedStudent);
-        }
+
 
     }
 
     // Soft Delete
     @PatchMapping
-    public ResponseEntity<Void> softDeleteStudent(@RequestParam Long id) {
-        boolean isDeleted = studentService.softDeleteStudent(id);
+    public ResponseEntity<String> softDeleteStudent(@RequestParam Long id) {
+         studentService.softDeleteStudent(id);
 
-        if (!isDeleted) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.noContent().build(); // 204
     }
 
     // Hard Delete
     @DeleteMapping
     public ResponseEntity<Void> deleteStudent(@RequestParam Long id) {
-        boolean isDeleted = studentService.hardDeleteStudent(id);
+       studentService.hardDeleteStudent(id);
 
-        if (!isDeleted) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204
     }
 
 
