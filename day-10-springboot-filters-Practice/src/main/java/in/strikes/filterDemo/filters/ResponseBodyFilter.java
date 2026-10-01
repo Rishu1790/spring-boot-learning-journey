@@ -4,11 +4,12 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
 
-@Component
+//@Component
 public class ResponseBodyFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request,
@@ -16,29 +17,37 @@ public class ResponseBodyFilter implements Filter {
                          FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletRequest httpReq = (HttpServletRequest) request;
+        HttpServletResponse httpRes = (HttpServletResponse) response;
 
-        ContentCachingResponseWrapper wrappedResp = new ContentCachingResponseWrapper(httpServletResponse);
-        chain.doFilter(request,wrappedResp);
+        ContentCachingResponseWrapper wrapper = new ContentCachingResponseWrapper(httpRes);
 
-        byte[] responseBodyInByte = wrappedResp.getContentAsByteArray();
-        String orignalBody = new String(responseBodyInByte);
-        String modifiedBody =
-                """
-                
+        chain.doFilter(request, response);
+
+        byte[] originalRespInRes = wrapper.getContentAsByteArray();
+
+        String originalRes = new String(originalRespInRes);
+
+        String modifyResp =
+                """ 
                 {
                    "originalResponse" : %S,
                    "appName" : "Student Management System"
                    
                 }
-                """.formatted(orignalBody);
+                """.formatted(originalRes);
 
-        wrappedResp.resetBuffer();
 
-        wrappedResp.getWriter().write(modifiedBody);
+        wrapper.resetBuffer();
+        wrapper.getWriter().write(modifyResp
+        );
 
-        wrappedResp.copyBodyToResponse();
+        wrapper.copyBodyToResponse();
+
+
+
+
+
 
 
     }

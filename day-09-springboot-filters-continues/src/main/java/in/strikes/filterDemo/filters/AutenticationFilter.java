@@ -23,6 +23,7 @@ public void doFilter(ServletRequest request,
     if(token == null || !token.equals("12345") ){
         httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
+        // Bta rHa h ki jo Content h wo json format ka h mna ki text/ plain text;
         httpServletResponse.setContentType("application/json" );
         // Body Response
         httpServletResponse.getWriter().write(

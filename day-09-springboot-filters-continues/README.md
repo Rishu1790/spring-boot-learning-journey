@@ -1,14 +1,20 @@
-package in.strikes.filterDemo.filters;
-
-import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
-import org.springframework.web.util.ContentCachingResponseWrapper;
-
-import java.io.IOException;
-
-@Component
+# Day 09- - Next Topic
+## Date
+01-10-2026
+## Aaj ka Objective
+Filters Ka use Karke Response Me ChherChhar
+## Aaj maine kya seekha?
+- zyaada tar to code hi kiya h!
+- 
+-
+-
+## Important Concepts
+| Concept | Meaning |
+|---|---|
+|  |  |
+|  |  |
+## Important Code
+```java
 public class ResponseBodyFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request,
@@ -26,13 +32,13 @@ public class ResponseBodyFilter implements Filter {
         String orignalBody = new String(responseBodyInByte);
         String modifiedBody =
                 """
-                
-                {
-                   "originalResponse" : %S,
-                   "appName" : "Student Management System"
-                   
-                }
-                """.formatted(orignalBody);
+                        
+                        {
+                           "originalResponse" : %S,
+                           "appName" : "Student Management System"
+                        
+                        }
+                        """.formatted(orignalBody);
 
         wrappedResp.resetBuffer();
 
@@ -41,5 +47,33 @@ public class ResponseBodyFilter implements Filter {
         wrappedResp.copyBodyToResponse();
 
 
-    }
-}
+    }}
+```
+## Application Flow
+```text
+Client
+  ↓
+Filters
+  |
+  v
+Controller
+  ↓
+Service
+  ↓
+Repository
+  ↓
+Database
+```
+## Error Faced
+### Error
+```text
+[Exact error message]
+```
+### Reason
+[Error kyu aaya]
+### Solution
+[Error kaise solve kiya]
+
+## Day 08 Summary
+Aaj maine filters seekha aur  implement kiya.
+---
