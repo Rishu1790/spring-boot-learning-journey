@@ -15,7 +15,7 @@ public class AuthenticationIntercepter implements HandlerInterceptor {
             throws Exception {
         String apikey = request.getHeader("x-api-key");
 
-        if(apikey != null && apikey.equals("secret123")){
+        if(apikey != null && !apikey.equals("secret123")){
             return false;
         }
 
