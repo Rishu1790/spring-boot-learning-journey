@@ -53,10 +53,24 @@ public class LoggingAspect {
 //        System.out.println("Method Intercepted 2");
 //    }
 
-    @Before("within(in.strikes.aopDemo.service.StudentService)")
+    @Before("within(in.strikes.aopDemo.service..*)"+
+    "&&" +
+    "execution(public * *(..))")
     public void logBeforeMethod(){
         System.out.println("Method Intercepted");
     }
+
+// 3-> @annotation
+//    @Before("@annotation(jdk.jfr.Timestamp)")
+//        public void logBeforeMethod(){
+//        System.out.println("Method Intercepted");
+//    }
+
+//    // 4-> bean
+//@Before("bean(studentService) || bean(studentController)")
+//public void logBeforeMethod(){
+//    System.out.println("Method Intercepted");
+//}
 
 
 }
